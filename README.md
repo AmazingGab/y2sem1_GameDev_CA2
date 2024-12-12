@@ -1,6 +1,5 @@
-# THE *PEACEFUL* BOMBER
+# BARREL RUN [OUTSIDE EDITION]
 A great project using a javascript engine.
-
 
 # Instructions:
 - Start game in MainMenu scene in Scenes!
