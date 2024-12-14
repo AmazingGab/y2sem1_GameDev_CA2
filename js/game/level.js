@@ -30,7 +30,7 @@ class Level extends Game {
             if (!this.finalPlace) {
                 this.finalPlace = true;
                 this.chosenMap(x, y, 3);
-               
+
             }
         }
 
@@ -135,14 +135,28 @@ class Level extends Game {
             this.addFloors(floors);
             this.mapGen(x + (32 * 30), y - 32, false);
         } else if (id === 7) { //parkour
+            let diffX = x;
+            let diffY = y;
+
+            const jumpFloors = [
+                new Floor(diffX += 96, diffY -= 64, 96, 20, null, false),
+                new Floor(diffX += 232, diffY -= 64, 96, 20, null, false),
+                new Floor(diffX += 232, diffY -= 64, 96, 20, null, false),
+                new Floor(diffX += 232, diffY -= 64, 96, 20, null, false)
+            ];
+
             const floors = [
                 //first platform
                 new Floor(x, y, 32, 96, Images.upFinish, true),
-                new Floor(x += 32, y -= 64, 32 * 30, 96, Images.smoothMiddle, true)
+                new Floor(x += 32, y, 32 * 30, 96, Images.smoothMiddle, true),
+                //higher bit
+                new Floor(x += (32 * 30) - 1, y -= 160, 32, 96, Images.smoothLeft, true),
+                new Floor(x += 32, y, 32 * 5, 96, Images.smoothMiddle, true)
             ];
 
+            this.addJumpFloors(jumpFloors);
             this.addFloors(floors);
-            this.mapGen(x + (32 * 30), y - 32, false);
+            this.mapGen(x + (32 * 5), y - 32, false);
         }
     }
 
@@ -159,6 +173,12 @@ class Level extends Game {
                 this.addGameObject(new Floor(floor.x, floor.y + 95, renderer.width, 400, null, false));
             }
 
+        }
+    }
+
+    addJumpFloors(platforms) {
+        for (const floor of platforms) {
+            this.addGameObject(floor);
         }
     }
 

@@ -16,7 +16,7 @@ class Player extends GameObject {
         
         this.animator = new Animator('red',w,h);
         this.addComponent(this.animator);
-        let walk = new Animation('red',w,h, this.getImages("./resources/images/player/walk", "walk", 6), 12);
+        let walk = new Animation('red',w,h, this.getImages("./resources/images/player/walk", "walk", 6), 9);
         let idle = new Animation('red', w, h, this.getImages("./resources/images/player/idle", "idle", 6), 4);
         
         this.animator.addAnimation("walk", walk);
