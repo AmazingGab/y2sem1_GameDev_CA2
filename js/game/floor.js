@@ -5,14 +5,19 @@ import Physics from '../engine/physics.js';
 
 
 class Floor extends GameObject {
-    constructor(x, y, w, h,img, color="brown")
+    constructor(x, y, w, h, img, textured, color = "#3A2411")
     {
         super(x, y);
-        this.addComponent(new HorizontalTileRenderer("brown", w, h, img));
-        
-        this.addComponent(new Physics({x:0, y:0},{x:0, y:0},{x:0, y:0}));
-        
+        if (textured) {
+            this.addComponent(new HorizontalTileRenderer(color, w, h, img));
+        }
+        else {
+            this.addComponent(new Renderer(color, w, h));
+        }
+        this.addComponent(new Physics({x: 0, y: 0}, {x: 0, y: 0}, {x: 0, y: 0}));
+
         this.tag = "floor";
     }
-} export default Floor
+}
+export default Floor
 

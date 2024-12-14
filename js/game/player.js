@@ -16,14 +16,24 @@ class Player extends GameObject {
         
         this.animator = new Animator('red',w,h);
         this.addComponent(this.animator);
-        let walk = new Animation('red',w,h, this.getImages("./resources/images/player/walk", "walk", 6), 10);
-        let idle = new Animation('red', w, h, this.getImages("./resources/images/player/idle", "idle", 6), 5);
+        let walk = new Animation('red',w,h, this.getImages("./resources/images/player/walk", "walk", 6), 12);
+        let idle = new Animation('red', w, h, this.getImages("./resources/images/player/idle", "idle", 6), 4);
         
         this.animator.addAnimation("walk", walk);
         this.animator.addAnimation("idle", idle);
         this.animator.setAnimation("idle");
-        this.speed = 100;
         this.tag = "player";
+        this.isOnPlatform = false;
+        this.direction = 1;
+        this.score = 0;
+        this.defaultSpeed = 150;
+        this.speed = this.defaultSpeed;
+        this.isOnPlatform = false;
+        this.isJumping = false;
+        this.jumpForce = 200;
+        this.jumpTime = 10;
+        this.jumpTimer = 0;
+        this.lives = 3;
     }
     
     update(deltaTime)
@@ -58,7 +68,15 @@ class Player extends GameObject {
         {
            // this.game.setPause();
         }
-        
+        if(input.isKeyDown("ArrowUp") && this.isOnPlatform)
+        {
+            this.startJump();
+        }
+       
+        if(this.isJumping)
+        {
+            this.updateJump(deltaTime);
+        }
         const floors = this.game.gameObjects.filter((obj) => obj instanceof Floor);
         for(const floor of floors)
         {
@@ -78,6 +96,26 @@ class Player extends GameObject {
         
         
         super.update(deltaTime);
+    }
+    
+    startJump()
+    {
+        if(this.isOnPlatform)
+        {
+            this.isJumping = true;
+            this.jumpTimer = this.jumpTime;
+            this.getComponent(Physics).velocity.y = - this.jumpForce;
+            this.isOnPlatform = false;
+        }
+    }
+    
+    updateJump(deltaTime)
+    {
+        this.jumpTimer -= deltaTime;
+        if(this.jumpTimer <=0 || this.getComponent(Physics).velocity.y > 0)
+        {
+            this.isJumping = false;
+        }
     }
     
     getImages(path, baseName, numImages)
