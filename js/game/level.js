@@ -11,56 +11,157 @@ class Level extends Game {
         super(canvasId);
         const player = new Player(10, this.canvas.height - 100, 64, 64);
         this.addGameObject(player);
+        this.camera.confiner = new Confiner(-50, -5000, 11000, 9999999);
         this.camera.target = player;
+
+        this.finalPlace = false;
+
         this.mapGen(0, this.canvas.height, true);
-//        const floors = [
-//            new Floor(-32, this.canvas.height, 32, 96, Images.end1),
-//            new Floor(0, this.canvas.height, 600, 96, Images.environemnt),
-//            new Floor(600, this.canvas.height - 32, 32, 96, Images.end1),
-//            new Floor(632, this.canvas.height - 32, 600, 96, Images.environemnt),
-//            new Floor(1232, this.canvas.height - 64, 32, 96, Images.end1),
-//            new Floor(1264, this.canvas.height - 64, 600, 96, Images.environemnt)
-//        ];
-
-//        for (const floor of floors)
-//        {
-//            this.addGameObject(floor);
-//        }
-
-        // map generation 
     }
-    
+
     mapGen(x, y, start) {
-        if (x <= 1000) {
+        if (x <= 10000) {
             if (start) {
                 this.startMap(x, y);
             } else {
-
+                this.chosenMap(x, y, Math.floor(Math.random() * 7) + 1);
             }
         } else {
-            //do plain 
+            if (!this.finalPlace) {
+                this.finalPlace = true;
+                this.chosenMap(x, y, 3);
+               
+            }
         }
 
     }
 
     startMap(x, y) {
         const floors = [
+            //first platform
             new Floor(x, y, 32, 96, Images.smoothLeft, true),
-            new Floor(x + 32, y, 32 * 10, 96, Images.smoothMiddle, true),
-            new Floor(x + 32 + 320, y, 32, 96, Images.smoothRight, true),
-
-            new Floor(x + 32 + 320 + 32 + 192, y, 32, 96, Images.smoothLeft, true),
-            new Floor(x + 32 + 320 + 32 + 192 + 32, y, 32 * 10, 96, Images.smoothMiddle, true)
+            new Floor(x += 32, y, 32 * 10, 96, Images.smoothMiddle, true),
+            new Floor(x += 320, y, 32, 96, Images.smoothRight, true),
+            //second platform
+            new Floor(x += (32 + 160), y, 32, 96, Images.smoothLeft, true),
+            new Floor(x += 32, y, 32 * 10, 96, Images.smoothMiddle, true)
         ];
-        
-        for (const floor of floors) {
-            this.addGameObject(floor);
-            let renderer = floor.getComponent(Renderer);
-            let isMiddleSection = renderer.width !== 32;
-            this.addGameObject(new Floor(isMiddleSection ? floor.x-1 : floor.x, floor.y+95, isMiddleSection ? renderer.width+2 : renderer.width, 300, null, false));
+
+        this.addFloors(floors);
+        this.mapGen(x + 320, y - 32, false);
+    }
+
+    chosenMap(x, y, id) {
+        console.log(id);
+        if (id === 1) {
+            const floors = [//gradual step
+                //first platform
+                new Floor(x, y, 32, 96, Images.upFinish, true),
+                new Floor(x += 32, y, 32 * 10, 96, Images.smoothMiddle, true),
+                //secound but up platform
+                new Floor(x += 320, y -= 32, 32, 96, Images.upFinish, true),
+                new Floor(x += 32, y, 32 * 10, 96, Images.smoothMiddle, true)
+            ];
+
+            this.addFloors(floors);
+            this.mapGen(x + 320, y - 32, false);
+        } else if (id === 2) { //staircase
+            const floors = [
+                //first platform
+                new Floor(x, y, 32, 96, Images.upFinish, true),
+                new Floor(x += 32, y, 32 * 5, 96, Images.smoothMiddle, true),
+                //secound but up platform
+                new Floor(x += 160, y -= 32, 32, 96, Images.upFinish, true),
+                new Floor(x += 32, y, 32 * 5, 96, Images.smoothMiddle, true),
+                //third but up platform
+                new Floor(x += 160, y -= 32, 32, 96, Images.upFinish, true),
+                new Floor(x += 32, y, 32 * 5, 96, Images.smoothMiddle, true),
+                // fifth
+                new Floor(x += 160, y -= 32, 32, 96, Images.upFinish, true),
+                new Floor(x += 32, y, 32 * 5, 96, Images.smoothMiddle, true),
+                //sixth
+                new Floor(x += 160, y -= 32, 32, 96, Images.upFinish, true),
+                new Floor(x += 32, y, 32 * 5, 96, Images.smoothMiddle, true)
+            ];
+
+            this.addFloors(floors);
+            this.mapGen(x + 160, y - 32, false);
+        } else if (id === 3) { //plain
+            const floors = [
+                //first platform
+                new Floor(x, y, 32, 96, Images.upFinish, true),
+                new Floor(x += 32, y, 32 * 30, 96, Images.smoothMiddle, true)
+            ];
+
+            this.addFloors(floors);
+            this.mapGen(x + (32 * 30), y - 32, false);
+        } else if (id === 4) { //steps with gaps
+            const floors = [
+                //first platform
+                new Floor(x, y, 32, 96, Images.upFinish, true),
+                new Floor(x += 32, y, 32 * 8, 96, Images.smoothMiddle, true),
+                new Floor(x += (32 * 8), y, 32, 96, Images.smoothRight, true),
+                //second platform
+                new Floor(x += (32 + 128), y -= 32, 32, 96, Images.smoothLeft, true),
+                new Floor(x += 32, y, 32 * 8, 96, Images.smoothMiddle, true),
+                new Floor(x += (32 * 8), y, 32, 96, Images.smoothRight, true),
+                //third
+                new Floor(x += (32 + 128), y -= 32, 32, 96, Images.smoothLeft, true),
+                new Floor(x += 32, y, 32 * 8, 96, Images.smoothMiddle, true),
+                new Floor(x += (32 * 8), y, 32, 96, Images.smoothRight, true),
+                //fourth
+                new Floor(x += 160, y -= 32, 32, 96, Images.smoothLeft, true),
+                new Floor(x += 32, y, 32 * 8, 96, Images.smoothMiddle, true)
+            ];
+
+            this.addFloors(floors);
+            this.mapGen(x + (32 * 8), y - 32, false);
+        } else if (id === 5) { //plain w trap
+            const floors = [
+                //first platform
+                new Floor(x, y, 32, 96, Images.upFinish, true),
+                new Floor(x += 32, y, 32 * 30, 96, Images.smoothMiddle, true)
+            ];
+
+            this.addFloors(floors);
+            this.mapGen(x + (32 * 30), y - 32, false);
+        } else if (id === 6) { //plain w checkpoint
+            const floors = [
+                //first platform
+                new Floor(x, y, 32, 96, Images.upFinish, true),
+                new Floor(x += 32, y, 32 * 30, 96, Images.smoothMiddle, true)
+            ];
+
+            this.addFloors(floors);
+            this.mapGen(x + (32 * 30), y - 32, false);
+        } else if (id === 7) { //parkour
+            const floors = [
+                //first platform
+                new Floor(x, y, 32, 96, Images.upFinish, true),
+                new Floor(x += 32, y -= 64, 32 * 30, 96, Images.smoothMiddle, true)
+            ];
+
+            this.addFloors(floors);
+            this.mapGen(x + (32 * 30), y - 32, false);
         }
     }
-    
+
+    addFloors(floors) {
+        for (const floor of floors) {
+            this.addGameObject(floor);
+            //adding bottom to it
+            let renderer = floor.getComponent(Renderer);
+            let isStep = renderer.image === Images.upFinish;
+            let isMiddleSection = renderer.width !== 32;
+            if (isStep || isMiddleSection) {
+                this.addGameObject(new Floor(floor.x - 1, floor.y + 95, renderer.width + 2, 400, null, false));
+            } else {
+                this.addGameObject(new Floor(floor.x, floor.y + 95, renderer.width, 400, null, false));
+            }
+
+        }
+    }
+
 }
 export default Level
 
