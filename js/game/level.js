@@ -6,37 +6,41 @@ import Player from './player.js';
 import Floor from './floor.js';
 import Barrel from './barrel.js';
 import Checkpoint from './checkpoint.js';
+import Hammer from './hammer.js';
+import HealthPack from './healthpack.js';
 import {Images} from '../engine/resources.js';
 
 class Level extends Game {
     constructor(canvasId)
     {
         super(canvasId);
+        //generates a level
         this.mapGen(0, this.canvas.height, true);
+        //player
         const player = new Player(10, this.canvas.height - 100, 64, 64);
         this.addGameObject(player);
+        //camera confiner
         this.camera.confiner = new Confiner(-50, -5000, 11000, 9999999);
         this.camera.target = player;
+
 
         this.finalPlace = false;
         this.time = 5000;
         this.canSpawn = true;
 
     }
-
-    randomSpawn() {
-        this.addGameObject(new Barrel(11000, this.canvas.height - 10000,25,25));
-    }
     
     update(deltaTime) {
+        //spawns barrels x time
         if (this.canSpawn) {
             this.canSpawn = false;
-            this.randomSpawn();
+            this.addGameObject(new Barrel(12500, this.canvas.height - 10000,25,25));
             setTimeout(() => (this.canSpawn = true), this.time);
         }
         super.update(deltaTime);
     }
 
+    //generates map until it reaches nearly 9500 and then places end bit
     mapGen(x, y, start) {
         if (x <= 9500) {
             if (start) {
@@ -106,12 +110,14 @@ class Level extends Game {
             this.addFloors(floors);
             this.mapGen(x + 160, y - 32, false);
         } else if (id === 3) { //plain
+            let diffX = x;
             const floors = [
                 //first platform
                 new Floor(x, y, 32, 96, Images.upFinish, true),
                 new Floor(x += 32, y, 32 * 30, 96, Images.smoothMiddle, true)
             ];
-
+            
+            this.randomCollectible(diffX+32+(32*15), y);
             this.addFloors(floors);
             this.mapGen(x + (32 * 30), y - 32, false);
         } else if (id === 4) { //steps with gaps
@@ -183,11 +189,10 @@ class Level extends Game {
             const floors = [
                 //first platform
                 new Floor(x, y, 32, 96, Images.upFinish, true),
-                new Floor(x += 32, y, 32 * 30, 96, Images.smoothMiddle, true)
+                new Floor(x += 32, y, 32 * 100, 96, Images.smoothMiddle, true)
             ];
 
             this.addFloors(floors);
-            this.mapGen(x + (32 * 30), y - 32, false);
         }
     }
 
@@ -211,6 +216,20 @@ class Level extends Game {
         for (const floor of platforms) {
             this.addGameObject(floor);
         }
+    }
+    
+    randomCollectible(x, y) {
+        if (Math.floor(Math.random() * 50) + 1 >= 40) {
+            if (Math.floor(Math.random() * 10) + 1 >= 8) {
+                console.log("h")
+                this.addGameObject(new Hammer(x, y-50));
+            }
+            else {
+                console.log("hp")
+                this.addGameObject(new HealthPack(x, y-50));
+            }
+        }
+                
     }
 
 }
