@@ -1,8 +1,10 @@
 import Game from '../engine/game.js';
+import GameObject from '../engine/gameobject.js';
 import Renderer from '../engine/renderer.js';
 import Confiner from '../engine/confiner.js';
 import Player from './player.js';
 import Floor from './floor.js';
+import Barrel from './barrel.js';
 import {Images} from '../engine/resources.js';
 
 class Level extends Game {
@@ -15,12 +17,27 @@ class Level extends Game {
         this.camera.target = player;
 
         this.finalPlace = false;
+        this.time = 5000;
+        this.canSpawn = true;
 
         this.mapGen(0, this.canvas.height, true);
     }
 
+    randomSpawn() {
+        this.addGameObject(new Barrel(2000, this.canvas.height - 10000,25,25));
+    }
+    
+    update(deltaTime) {
+        if (this.canSpawn) {
+            this.canSpawn = false;
+            this.randomSpawn();
+            setTimeout(() => (this.canSpawn = true), this.time);
+        }
+        super.update(deltaTime);
+    }
+
     mapGen(x, y, start) {
-        if (x <= 10000) {
+        if (x <= 9500) {
             if (start) {
                 this.startMap(x, y);
             } else {
@@ -29,8 +46,7 @@ class Level extends Game {
         } else {
             if (!this.finalPlace) {
                 this.finalPlace = true;
-                this.chosenMap(x, y, 3);
-
+                this.chosenMap(x, y, 8);
             }
         }
 
@@ -46,13 +62,12 @@ class Level extends Game {
             new Floor(x += (32 + 160), y, 32, 96, Images.smoothLeft, true),
             new Floor(x += 32, y, 32 * 10, 96, Images.smoothMiddle, true)
         ];
-
+        
         this.addFloors(floors);
         this.mapGen(x + 320, y - 32, false);
     }
 
     chosenMap(x, y, id) {
-        console.log(id);
         if (id === 1) {
             const floors = [//gradual step
                 //first platform
@@ -157,6 +172,15 @@ class Level extends Game {
             this.addJumpFloors(jumpFloors);
             this.addFloors(floors);
             this.mapGen(x + (32 * 5), y - 32, false);
+        } else if (id === 8) { //end
+            const floors = [
+                //first platform
+                new Floor(x, y, 32, 96, Images.upFinish, true),
+                new Floor(x += 32, y, 32 * 30, 96, Images.smoothMiddle, true)
+            ];
+
+            this.addFloors(floors);
+            this.mapGen(x + (32 * 30), y - 32, false);
         }
     }
 
