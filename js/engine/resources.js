@@ -50,6 +50,7 @@ Images.trap.src = "./resources/images/environment/trap.png";
 Images.logo.src = "./resources/images/ui/logo.png";
 
 AudioFiles.music.loop = true;
+AudioFiles.music.volume = 0.1;
 
 // Export the Images and AudioFiles objects so they can be imported and used in other modules.
 export { Images, AudioFiles};

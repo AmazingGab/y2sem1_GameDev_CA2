@@ -11,7 +11,7 @@ import HealthPack from './healthpack.js';
 import Decoration from './decoration.js';
 import ImageTextUI from './imagetextui.js';
 import Trap from './trap.js';
-import {Images} from '../engine/resources.js';
+import {Images, AudioFiles} from '../engine/resources.js';
 
 class Level extends Game {
     constructor(canvasId)
@@ -36,7 +36,7 @@ class Level extends Game {
         //camera confiner
         this.camera.confiner = new Confiner(-50, -5000, 11000, 9999999);
         this.camera.target = player;
-
+        AudioFiles.music.play();
         this.finalPlace = false;
         this.time = 5000;
         this.canSpawn = true;  

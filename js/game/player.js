@@ -39,7 +39,7 @@ class Player extends GameObject {
         this.tag = "player";
         this.isOnPlatform = false;
         this.direction = 1;
-        this.defaultSpeed = 800;
+        this.defaultSpeed = 150;
         this.speed = this.defaultSpeed;
         this.isOnPlatform = false;
         this.isJumping = false;
@@ -91,7 +91,6 @@ class Player extends GameObject {
             } else {
                 physics.velocity.x = 0;
                 this.animator.setAnimation("idle");
-                //AudioFiles.walk.pause();
             }
 
             if (input.isKeyDown("ArrowUp") && this.isOnPlatform) {
