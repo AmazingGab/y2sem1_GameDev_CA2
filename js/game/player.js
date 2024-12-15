@@ -14,6 +14,7 @@ import ParticleSystem from '../engine/particleSystem.js';
 import Level from './level.js';
 import TextUI from './textui.js';
 import Button from './button.js';
+import Trap from './trap.js';
 import {Images, AudioFiles} from '../engine/resources.js';
 
 class Player extends GameObject {
@@ -38,7 +39,7 @@ class Player extends GameObject {
         this.tag = "player";
         this.isOnPlatform = false;
         this.direction = 1;
-        this.defaultSpeed = 150;
+        this.defaultSpeed = 800;
         this.speed = this.defaultSpeed;
         this.isOnPlatform = false;
         this.isJumping = false;
@@ -98,9 +99,6 @@ class Player extends GameObject {
                 this.startJump();
             }
         }
-//        if (input.isKeyDown("KeyP")) {
-//                this.game.setPause();
-//        }
 
         if (this.isJumping) {
             this.updateJump(deltaTime);
@@ -185,6 +183,39 @@ class Player extends GameObject {
                 }
                 //break effect
                 this.emitParticles(b, "brown");
+            }
+        }
+        
+        //checking for trap collision
+        const traps = this.game.gameObjects.filter(obj => obj instanceof Trap);
+        for (const t of traps) {
+            if (this.getComponent(Physics).isColliding(t.getComponent(Physics))) {
+                const trapPhysics = t.getComponent(Physics);
+                trapPhysics.velocity.y = 500;
+                setTimeout(() => (physics.velocity.y = 0), 80);
+                AudioFiles.ouch.play();
+                //if there are no shields respawn player
+                if (this.shield-25 < 0 ) {
+                    //if there are no lives reset
+                    if (this.lives-1 < 1) {
+                       this.resetGame();
+                    }
+                    else {
+                        this.score-=1000;
+                        this.shield = 100;
+                        this.lives-=1;
+                        this.spawnPlayer();
+                    }
+                }
+                //stun player if they still have shields
+                else {
+                    if (!this.isStunned) {
+                        this.score-=100;
+                        this.stunPlayer();
+                        this.emitParticles(this, "red");
+                        this.shield -= 25;
+                    }
+                }
             }
         }
         

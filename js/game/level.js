@@ -10,6 +10,7 @@ import Hammer from './hammer.js';
 import HealthPack from './healthpack.js';
 import Decoration from './decoration.js';
 import ImageTextUI from './imagetextui.js';
+import Trap from './trap.js';
 import {Images} from '../engine/resources.js';
 
 class Level extends Game {
@@ -29,7 +30,7 @@ class Level extends Game {
         this.addGameObject(hammerUI);
         this.addGameObject(healthUI);
         this.addGameObject(levelUI);
-        const player = new Player(10, 100, 64, 64, shieldUI, hammerUI, healthUI, levelUI);
+        const player = new Player(10, this.canvas.height+100, 64, 64, shieldUI, hammerUI, healthUI, levelUI);
         this.addGameObject(player);
         this.plr = player;
         //camera confiner
@@ -192,6 +193,8 @@ class Level extends Game {
             this.addGameObject(new Decoration(diffX, y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addGameObject(new Decoration(diffX+64+(32*8), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addGameObject(new Decoration(diffX+64+(32*20), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Trap(diffX+64+(32*14), y-5, 100, 50));
+            console.log("here");
             this.addFloors(floors);
             this.mapGen(x + (32 * 30), y - 32, false);
         } else if (id === 6) { //plain w checkpoint
