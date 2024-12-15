@@ -10,12 +10,15 @@ import Checkpoint from './checkpoint.js';
 import Collectible from './collectible.js';
 import Hammer from './hammer.js';
 import HealthPack from './healthpack.js';
-import ParticleSystem from '../engine/particleSystem.js'
+import ParticleSystem from '../engine/particleSystem.js';
+import Level from './level.js';
+import TextUI from './textui.js';
+import Button from './button.js';
 import {Images, AudioFiles} from '../engine/resources.js';
 
 class Player extends GameObject {
 
-    constructor(x, y, w, h) {
+    constructor(x, y, w, h, shieldUI, hammerUI, healthUI, levelUI) {
         super(x, y);
         this.addComponent(new Physics({x: 0, y: 0}, {x: 0, y: 0}));
         this.addComponent(new Input());
@@ -46,13 +49,21 @@ class Player extends GameObject {
         this.checkPoint = null;
         this.hasCheckPoint = false;
         this.isStunned = false;
-        
         //player stats
         this.shield = 100;
+        this.shieldUI = shieldUI
+        this.shieldUI.setText(this.shield);
         this.hammerAbility = 1;
+        this.hammerUI = hammerUI
+        this.hammerUI.setText(this.hammerAbility);
         this.lives = 3;
+        this.healthUI = healthUI
+        this.healthUI.setText(this.lives);
         this.level = 1;
+        this.levelUI = levelUI;
+        this.levelUI.setText(this.level);
         this.score = 0;
+        
     }
 
     update(deltaTime)
@@ -62,6 +73,10 @@ class Player extends GameObject {
         const input = this.getComponent(Input);
         const renderer = this.getComponent(Renderer);
         
+        this.shieldUI.setText(this.shield+"");
+        this.hammerUI.setText(this.hammerAbility+"");
+        this.healthUI.setText(this.lives+"");
+        this.levelUI.setText(this.level+"");
         //stopping movement if stunned
         if (!this.isStunned) {
             if (input.isKeyDown("ArrowRight")) {
@@ -106,11 +121,11 @@ class Player extends GameObject {
         }
 
         //checking if player is out of bounds
-        if (this.y >= 900 || this.x <= -100) {
+        if (this.y >= 900) {
             AudioFiles.ouch.play();
-            if (this.lives-1 < 0) {
-                AudioFiles.fail.play();
-                //reset
+            if (this.lives-1 < 1) {
+                this.spawnPlayer();
+                this.resetGame();
             }
             else {
                 this.score-=1000;
@@ -123,6 +138,7 @@ class Player extends GameObject {
         //checking if player won round
         if (this.x >= 10000) {
             this.score+=2000;
+            this.level+=1;
             AudioFiles.success.play();
             this.checkPoint = null;
             this.spawnPlayer();
@@ -147,9 +163,8 @@ class Player extends GameObject {
                     //if there are no shields respawn player
                     if (this.shield-25 < 0 ) {
                         //if there are no lives reset
-                        if (this.lives-1 < 0) {
-                            AudioFiles.fail.play();
-                            //reset
+                        if (this.lives-1 < 1) {
+                           this.resetGame();
                         }
                         else {
                             this.score-=1000;
@@ -177,7 +192,7 @@ class Player extends GameObject {
         const checkpoints = this.game.gameObjects.filter(obj => obj instanceof Checkpoint);
         for (const c of checkpoints) {
             if (this.getComponent(Physics).isColliding(c.getComponent(Physics))) {
-                this.checkPoint = {x:c.x, y:c.y};
+                this.checkPoint = {x:c.x, y:c.y-100};
             }
         }
         
@@ -201,7 +216,15 @@ class Player extends GameObject {
 
         super.update(deltaTime);
     }
-
+    
+    resetGame() {
+        AudioFiles.fail.play();
+        this.game.addGameObject(new TextUI(this.game.canvas.width/2, 120, 400, 100, "YOU LOST"));
+        this.game.addGameObject(new TextUI(this.game.canvas.width/2, 230, 400, 100, "SCORE: "+this.score));
+        this.game.addGameObject(new TextUI(this.game.canvas.width/2, 340, 400, 100, "LEVEL: "+this.level));
+        this.game.addGameObject(new Button(this.game.canvas.width/2-200, this.game.canvas.height/2+200, 400, 100, 'red', "TRY AGAIN"))
+        this.game.setPause();
+    }
 
     //method to bring the player back the check point or spawnpoint if there is no checkpoint
     spawnPlayer() {

@@ -9,7 +9,7 @@ import Checkpoint from './checkpoint.js';
 import Hammer from './hammer.js';
 import HealthPack from './healthpack.js';
 import Decoration from './decoration.js';
-import Button from './button.js';
+import ImageTextUI from './imagetextui.js';
 import {Images} from '../engine/resources.js';
 
 class Level extends Game {
@@ -20,14 +20,21 @@ class Level extends Game {
         this.decorationArray = [Images.tree1, Images.tree2, Images.flowers, Images.bush1, Images.bush2];
         this.mapGen(0, this.canvas.height, true);
         //player
-        const player = new Player(10, this.canvas.height - 100, 64, 64);
+        
+        let hammerUI = new ImageTextUI(20, 220, 100, 100, Images.hammer, 0);
+        let shieldUI = new ImageTextUI(130, 220, 100, 100, Images.shield, 0);        
+        let healthUI = new ImageTextUI(240, 220, 100, 100, Images.heart, 0);
+        let levelUI = new ImageTextUI(350, 220, 100, 100, Images.star, 0);
+        this.addGameObject(shieldUI);
+        this.addGameObject(hammerUI);
+        this.addGameObject(healthUI);
+        this.addGameObject(levelUI);
+        const player = new Player(10, 100, 64, 64, shieldUI, hammerUI, healthUI, levelUI);
         this.addGameObject(player);
         this.plr = player;
         //camera confiner
         this.camera.confiner = new Confiner(-50, -5000, 11000, 9999999);
         this.camera.target = player;
-        
-        this.addGameObject(new Button(this.canvas.width-110,10,100,40,'lightGrey', "Pause")); 
 
         this.finalPlace = false;
         this.time = 5000;

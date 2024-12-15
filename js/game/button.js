@@ -8,13 +8,10 @@ class Button extends GameObject {
         this.height = h;
         this.color = color;
         this.text = str;
-        this.pause = false;
-        document.addEventListener('click', this.click.bind(this), false);
+        this.handleClick = this.click.bind(this);
+        document.addEventListener('click', this.handleClick, false);
     }
 
-    pauseGame() {
-        this.pause = !this.pause;
-    }
 
     click(event) {
         let rect = this.game.canvas.getBoundingClientRect();
@@ -23,18 +20,16 @@ class Button extends GameObject {
 
         if (event.clientX - rect.left >= this.x && event.clientX - rect.left <= this.x + width && event.clientY - rect.top >= this.y && event.clientY - rect.top <= this.y + height) {
 
-            if (this.text === "Start") {
+            if (this.text === "PLAY" || this.text === "TRY AGAIN") {
                 const level = new Level(this.game.canvas.id);
+                document.removeEventListener('click', this.handleClick, false);
                 level.start();
-            }
-            if (this.text === "Pause") {
-                this.game.pauseGame();
             }
         }
     }
 
     draw(ctx) {
-        super.draw(ctx);
+        //super.draw(ctx);
         ctx.fillStyle = this.color;
         ctx.fillRect(this.game.camera.x + this.x, this.game.camera.y + this.y, this.width, this.height);
         ctx.textAlign = "center";

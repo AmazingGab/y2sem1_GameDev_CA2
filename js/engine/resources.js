@@ -14,6 +14,7 @@ const Images = {
     bush2: new Image(),
     shield: new Image(),
     heart: new Image(),
+    star: new Image(),
     logo: new Image()
 };
 
@@ -43,6 +44,7 @@ Images.bush1.src = "./resources/images/environment/bush1.png";
 Images.bush2.src = "./resources/images/environment/bush2.png";
 Images.shield.src = "./resources/images/ui/shields.png";
 Images.heart.src = "./resources/images/ui/heart.png";
+Images.star.src = "./resources/images/ui/star.png";
 Images.logo.src = "./resources/images/ui/logo.png";
 
 AudioFiles.music.loop = true;
