@@ -28,9 +28,7 @@ class Level extends Game {
 
         this.finalPlace = false;
         this.time = 5000;
-        this.canSpawn = true;
-        
-        
+        this.canSpawn = true;  
     }
     
     update(deltaTime) {
@@ -60,6 +58,7 @@ class Level extends Game {
 
     }
 
+    //sets up start area
     startMap(x, y) {
         let diffX = x;
         
@@ -80,10 +79,11 @@ class Level extends Game {
         this.addFloors(floors);
         this.mapGen(x + 320, y - 32, false);
     }
-
+    
+    //loads up a specific type of location to spawn
     chosenMap(x, y, id) {
         let diffX = x;
-                    let diffY = y;
+        let diffY = y;
         if (id === 1) {
             const floors = [//gradual step
                 //first platform
@@ -94,10 +94,13 @@ class Level extends Game {
                 new Floor(x += 32, y, 32 * 10, 96, Images.smoothMiddle, true)
             ];
             
+            //decorations
             this.addGameObject(new Decoration(diffX, y-200+32, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addGameObject(new Decoration(diffX+64+(32*5), y-200+32, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addGameObject(new Decoration(diffX+64+(32*15), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            //adds floors as objects
             this.addFloors(floors);
+            //generates a new location after 1 is created
             this.mapGen(x + 320, y - 32, false);
         } else if (id === 2) { //staircase
             const floors = [
@@ -133,6 +136,7 @@ class Level extends Game {
             this.addGameObject(new Decoration(diffX, y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addGameObject(new Decoration(diffX+64+(32*8), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addGameObject(new Decoration(diffX+64+(32*20), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            //random collectible to spawn
             this.randomCollectible(diffX+32+(32*15), y);
             this.addFloors(floors);
             this.mapGen(x + (32 * 30), y - 32, false);
@@ -217,23 +221,25 @@ class Level extends Game {
             const floors = [
                 //first platform
                 new Floor(x, y, 32, 96, Images.upFinish, true),
-                new Floor(x += 32, y, 32 * 100, 96, Images.smoothMiddle, true)
+                new Floor(x += 32, y, 32 * 200, 96, Images.smoothMiddle, true)
             ];
             
-             this.addGameObject(new Decoration(diffX, y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX, y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addGameObject(new Decoration(diffX+64+(32*8), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addGameObject(new Decoration(diffX+64+(32*20), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addFloors(floors);
         }
     }
 
+    //adds the floors as objects in the game
     addFloors(floors) {
         for (const floor of floors) {
             this.addGameObject(floor);
-            //adding bottom to it
+            //adding bottom to it so its not the bare top
             let renderer = floor.getComponent(Renderer);
             let isStep = renderer.image === Images.upFinish;
             let isMiddleSection = renderer.width !== 32;
+            //fixes weird glitch were there would be 1 pixel gaps so my fix is to overlap it
             if (isStep || isMiddleSection) {
                 this.addGameObject(new Floor(floor.x - 1, floor.y + 95, renderer.width + 2, 400, null, false));
             } else {
@@ -243,12 +249,14 @@ class Level extends Game {
         }
     }
 
+    //this is for the parkour location to add it as an object
     addJumpFloors(platforms) {
         for (const floor of platforms) {
             this.addGameObject(floor);
         }
     }
     
+    //decides whether a collectible should spawn
     randomCollectible(x, y) {
         if (Math.floor(Math.random() * 50) + 1 >= 40) {
             if (Math.floor(Math.random() * 10) + 1 >= 8) {
