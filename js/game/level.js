@@ -8,6 +8,7 @@ import Barrel from './barrel.js';
 import Checkpoint from './checkpoint.js';
 import Hammer from './hammer.js';
 import HealthPack from './healthpack.js';
+import Decoration from './decoration.js';
 import {Images} from '../engine/resources.js';
 
 class Level extends Game {
@@ -15,6 +16,7 @@ class Level extends Game {
     {
         super(canvasId);
         //generates a level
+        this.decorationArray = [Images.tree1, Images.tree2, Images.flowers, Images.bush1, Images.bush2];
         this.mapGen(0, this.canvas.height, true);
         //player
         const player = new Player(10, this.canvas.height - 100, 64, 64);
@@ -27,7 +29,8 @@ class Level extends Game {
         this.finalPlace = false;
         this.time = 5000;
         this.canSpawn = true;
-
+        
+        
     }
     
     update(deltaTime) {
@@ -70,12 +73,17 @@ class Level extends Game {
             new Floor(x += 32, y, 32 * 10, 96, Images.smoothMiddle, true)
         ];
         
+        this.addGameObject(new Decoration(diffX, y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+        this.addGameObject(new Decoration(diffX+64+(32*5), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+        this.addGameObject(new Decoration(diffX+64+(32*15), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
         this.addGameObject(new Checkpoint(diffX+32+(32*2), y-100, 160, 100));
         this.addFloors(floors);
         this.mapGen(x + 320, y - 32, false);
     }
 
     chosenMap(x, y, id) {
+        let diffX = x;
+                    let diffY = y;
         if (id === 1) {
             const floors = [//gradual step
                 //first platform
@@ -85,7 +93,10 @@ class Level extends Game {
                 new Floor(x += 320, y -= 32, 32, 96, Images.upFinish, true),
                 new Floor(x += 32, y, 32 * 10, 96, Images.smoothMiddle, true)
             ];
-
+            
+            this.addGameObject(new Decoration(diffX, y-200+32, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*5), y-200+32, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*15), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addFloors(floors);
             this.mapGen(x + 320, y - 32, false);
         } else if (id === 2) { //staircase
@@ -106,17 +117,22 @@ class Level extends Game {
                 new Floor(x += 160, y -= 32, 32, 96, Images.upFinish, true),
                 new Floor(x += 32, y, 32 * 5, 96, Images.smoothMiddle, true)
             ];
-
+            
+            this.addGameObject(new Decoration(diffX, y-200+128, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*10), y-200+64, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*21), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addFloors(floors);
             this.mapGen(x + 160, y - 32, false);
         } else if (id === 3) { //plain
-            let diffX = x;
             const floors = [
                 //first platform
                 new Floor(x, y, 32, 96, Images.upFinish, true),
                 new Floor(x += 32, y, 32 * 30, 96, Images.smoothMiddle, true)
             ];
             
+            this.addGameObject(new Decoration(diffX, y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*8), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*20), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.randomCollectible(diffX+32+(32*15), y);
             this.addFloors(floors);
             this.mapGen(x + (32 * 30), y - 32, false);
@@ -138,7 +154,12 @@ class Level extends Game {
                 new Floor(x += 160, y -= 32, 32, 96, Images.smoothLeft, true),
                 new Floor(x += 32, y, 32 * 8, 96, Images.smoothMiddle, true)
             ];
-
+            
+            
+            this.addGameObject(new Decoration(diffX, y-200+96, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*13), y-200+64, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*28), y-200+32, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*40), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addFloors(floors);
             this.mapGen(x + (32 * 8), y - 32, false);
         } else if (id === 5) { //plain w trap
@@ -148,10 +169,12 @@ class Level extends Game {
                 new Floor(x += 32, y, 32 * 30, 96, Images.smoothMiddle, true)
             ];
 
+            this.addGameObject(new Decoration(diffX, y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*8), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*20), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addFloors(floors);
             this.mapGen(x + (32 * 30), y - 32, false);
         } else if (id === 6) { //plain w checkpoint
-            let diffX = x;
             
             const floors = [
                 //first platform
@@ -159,13 +182,18 @@ class Level extends Game {
                 new Floor(x += 32, y, 32 * 30, 96, Images.smoothMiddle, true)
             ];
             
+            this.addGameObject(new Decoration(diffX, y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*8), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*20), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addGameObject(new Checkpoint(diffX+32+(32*15), y-100, 160, 100));
             this.addFloors(floors);
             this.mapGen(x + (32 * 30), y - 32, false);
         } else if (id === 7) { //parkour
-            let diffX = x;
-            let diffY = y;
-
+            
+            this.addGameObject(new Decoration(diffX, y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*8), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*20), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            
             const jumpFloors = [
                 new Floor(diffX += 96, diffY -= 64, 96, 20, null, false),
                 new Floor(diffX += 232, diffY -= 64, 96, 20, null, false),
@@ -181,7 +209,7 @@ class Level extends Game {
                 new Floor(x += (32 * 30) - 1, y -= 160, 32, 96, Images.smoothLeft, true),
                 new Floor(x += 32, y, 32 * 5, 96, Images.smoothMiddle, true)
             ];
-
+            
             this.addJumpFloors(jumpFloors);
             this.addFloors(floors);
             this.mapGen(x + (32 * 5), y - 32, false);
@@ -191,7 +219,10 @@ class Level extends Game {
                 new Floor(x, y, 32, 96, Images.upFinish, true),
                 new Floor(x += 32, y, 32 * 100, 96, Images.smoothMiddle, true)
             ];
-
+            
+             this.addGameObject(new Decoration(diffX, y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*8), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
+            this.addGameObject(new Decoration(diffX+64+(32*20), y-200, 200, 200, this.decorationArray[Math.floor(Math.random() * 5)]));
             this.addFloors(floors);
         }
     }
@@ -221,11 +252,9 @@ class Level extends Game {
     randomCollectible(x, y) {
         if (Math.floor(Math.random() * 50) + 1 >= 40) {
             if (Math.floor(Math.random() * 10) + 1 >= 8) {
-                console.log("h")
                 this.addGameObject(new Hammer(x, y-50));
             }
             else {
-                console.log("hp")
                 this.addGameObject(new HealthPack(x, y-50));
             }
         }

@@ -6,7 +6,12 @@ const Images = {
     upFinish: new Image(),
     checkpoint: new Image(),
     hammer: new Image(),
-    hp: new Image()
+    hp: new Image(),
+    tree1: new Image(),
+    tree2: new Image(),
+    flowers: new Image(),
+    bush1: new Image(),
+    bush2: new Image()
 };
 
 // Create an AudioFiles object to hold the file paths of the audio resources.
@@ -28,6 +33,11 @@ Images.upFinish.src = "./resources/images/environment/upfinish.png";
 Images.checkpoint.src = "./resources/images/checkpoint/checkpoint.png";
 Images.hammer.src = "./resources/images/collectible/Hammer.png";
 Images.hp.src = "./resources/images/collectible/HealthPack.png";
+Images.tree1.src = "./resources/images/environment/tree1.png";
+Images.tree2.src = "./resources/images/environment/tree2.png";
+Images.flowers.src = "./resources/images/environment/sunflowers.png";
+Images.bush1.src = "./resources/images/environment/bush1.png";
+Images.bush2.src = "./resources/images/environment/bush2.png";
 
 AudioFiles.music.loop = true;
 
