@@ -1,5 +1,5 @@
 // Import the Level class from './game/level.js'.
-import Level from './game/level.js';
+import Level from './game/loadingscreen.js';
 
 // Create a new instance of the Level class with 'gameCanvas' as the canvas ID.
 const game = new Level('gameCanvas');

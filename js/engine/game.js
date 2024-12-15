@@ -23,8 +23,13 @@ class Game {
     window.addEventListener('resize', () => this.resizeCanvas());
     // Instantiate a new camera without a target and with dimensions equal to the canvas size.
     this.camera = new Camera(null, this.canvas.width, this.canvas.height);
+    this.pause = false;
   }
 
+  setPause()
+  {
+      this.pause = !this.pause;
+  }
   // This method resizes the canvas to fill the window, with a small margin.
   resizeCanvas() {
     this.canvas.width = window.innerWidth - 50;
@@ -44,9 +49,13 @@ class Game {
     // Update the last frame time.
     this.lastFrameTime = currentFrameTime;
 
-    // Update all game objects and the camera.
-    this.update();
-    this.camera.update();
+    if(!this.pause)
+    {
+        // Update all game objects and the camera.
+        this.update();
+        this.camera.update();
+        
+    }
     // Draw the game objects on the canvas.
     this.draw();
 

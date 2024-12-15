@@ -51,6 +51,8 @@ class Player extends GameObject {
         this.shield = 100;
         this.hammerAbility = 1;
         this.lives = 3;
+        this.level = 1;
+        this.score = 0;
     }
 
     update(deltaTime)
@@ -111,10 +113,19 @@ class Player extends GameObject {
                 //reset
             }
             else {
+                this.score-=1000;
                 this.shield = 100;
                 this.lives-=1;
                 this.spawnPlayer();
             }
+        }
+        
+        //checking if player won round
+        if (this.x >= 10000) {
+            this.score+=2000;
+            AudioFiles.success.play();
+            this.checkPoint = null;
+            this.spawnPlayer();
         }
 
         //checking for barrel collision
@@ -126,6 +137,7 @@ class Player extends GameObject {
                 
                 //using hammer ability
                 if (this.hammerAbility > 0) {
+                    this.score+=200;
                     this.hammerAbility--;
                     this.emitParticles(this, "blue");
                 }
@@ -140,6 +152,7 @@ class Player extends GameObject {
                             //reset
                         }
                         else {
+                            this.score-=1000;
                             this.shield = 100;
                             this.lives-=1;
                             this.spawnPlayer();
@@ -148,6 +161,7 @@ class Player extends GameObject {
                     //stun player if they still have shields
                     else {
                         if (!this.isStunned) {
+                            this.score-=100;
                             this.stunPlayer();
                             this.emitParticles(this, "red");
                             this.shield -= 25;
@@ -173,14 +187,14 @@ class Player extends GameObject {
             if (this.getComponent(Physics).isColliding(c.getComponent(Physics))) {
                 this.game.removeGameObject(c);
                 AudioFiles.pickup.play();
-                
+                this.score+=100;
                 if (c instanceof Hammer) {
                     this.hammerAbility+=1;
-                     this.emitParticles(c, "grey");
+                    this.emitParticles(c, "grey");
                 }
                 else if (c instanceof HealthPack) {
                     this.lives+=1;
-                     this.emitParticles(c, "green");
+                    this.emitParticles(c, "green");
                 }
             }
         }

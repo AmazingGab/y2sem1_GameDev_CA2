@@ -11,7 +11,10 @@ const Images = {
     tree2: new Image(),
     flowers: new Image(),
     bush1: new Image(),
-    bush2: new Image()
+    bush2: new Image(),
+    shield: new Image(),
+    heart: new Image(),
+    logo: new Image()
 };
 
 // Create an AudioFiles object to hold the file paths of the audio resources.
@@ -38,6 +41,9 @@ Images.tree2.src = "./resources/images/environment/tree2.png";
 Images.flowers.src = "./resources/images/environment/sunflowers.png";
 Images.bush1.src = "./resources/images/environment/bush1.png";
 Images.bush2.src = "./resources/images/environment/bush2.png";
+Images.shield.src = "./resources/images/ui/shields.png";
+Images.heart.src = "./resources/images/ui/heart.png";
+Images.logo.src = "./resources/images/ui/logo.png";
 
 AudioFiles.music.loop = true;
 

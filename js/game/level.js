@@ -9,6 +9,7 @@ import Checkpoint from './checkpoint.js';
 import Hammer from './hammer.js';
 import HealthPack from './healthpack.js';
 import Decoration from './decoration.js';
+import Button from './button.js';
 import {Images} from '../engine/resources.js';
 
 class Level extends Game {
@@ -21,10 +22,12 @@ class Level extends Game {
         //player
         const player = new Player(10, this.canvas.height - 100, 64, 64);
         this.addGameObject(player);
+        this.plr = player;
         //camera confiner
         this.camera.confiner = new Confiner(-50, -5000, 11000, 9999999);
         this.camera.target = player;
-
+        
+        this.addGameObject(new Button(this.canvas.width-110,10,100,40,'lightGrey', "Pause")); 
 
         this.finalPlace = false;
         this.time = 5000;
@@ -38,6 +41,12 @@ class Level extends Game {
             this.addGameObject(new Barrel(12500, this.canvas.height - 10000,25,25));
             setTimeout(() => (this.canSpawn = true), this.time);
         }
+        
+        //checking if player won a round then decrease time
+        if (this.plr.x >= 9999.99) {
+            this.time-=200;
+        }
+        
         super.update(deltaTime);
     }
 
