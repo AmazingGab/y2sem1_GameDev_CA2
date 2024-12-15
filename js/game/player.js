@@ -38,7 +38,7 @@ class Player extends GameObject {
         this.tag = "player";
         this.isOnPlatform = false;
         this.direction = 1;
-        this.defaultSpeed = 1500;
+        this.defaultSpeed = 150;
         this.speed = this.defaultSpeed;
         this.isOnPlatform = false;
         this.isJumping = false;
@@ -53,7 +53,7 @@ class Player extends GameObject {
         this.shield = 100;
         this.shieldUI = shieldUI
         this.shieldUI.setText(this.shield);
-        this.hammerAbility = 1;
+        this.hammerAbility = 0;
         this.hammerUI = hammerUI
         this.hammerUI.setText(this.hammerAbility);
         this.lives = 3;
