@@ -1,16 +1,17 @@
 # BARREL RUN [OUTSIDE EDITION]
-A great project using a javascript engine.
+A sequal the the original game but with a few twist! Smaller barrels, random maps, more details and even more! No map is the same! Always something new, there is around 1,353,366,092,800 combinations!!!
 
 # Instructions:
-- Start game in MainMenu scene in Scenes!
-- Go through the menu and click play!
-- Go through as many levels as you can!
+- Click PLAY in Main Menu!
+- Head to the right side and enjoy the views!
+- BE CAREFUL WITH BARRELS OR TRAPS OR HOLES IN THE GROUND!
 - Don't lose!
+- How many levels can you reach???
 
 # Movement:
-- *W/Space* - To jump
-- *A* - Move left
-- *D* - Move right
+- *UP ARROW* - To jump
+- *LEFT ARROW* - Move left
+- *RIGHT ARROW* - Move right
 
 # Video Essay:
 - youtube link [here](https://youtu.be/MVb4knranZA).
