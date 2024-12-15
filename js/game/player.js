@@ -66,12 +66,10 @@ class Player extends GameObject {
                 physics.velocity.x = this.speed;
                 this.direction = 1;
                 this.animator.setAnimation("walk");
-                //AudioFiles.walk.play();
             } else if (input.isKeyDown("ArrowLeft")) {
                 physics.velocity.x = -this.speed;
                 this.direction = -1;
                 this.animator.setAnimation("walk");
-                //AudioFiles.walk.play();
             } else {
                 physics.velocity.x = 0;
                 this.animator.setAnimation("idle");
@@ -79,12 +77,13 @@ class Player extends GameObject {
             }
 
             if (input.isKeyDown("ArrowUp") && this.isOnPlatform) {
+                AudioFiles.jump.play();
                 this.startJump();
             }
         }
-        if (input.isKeyDown("KeyP")) {
-                // this.game.setPause();
-        }
+//        if (input.isKeyDown("KeyP")) {
+//                this.game.setPause();
+//        }
 
         if (this.isJumping) {
             this.updateJump(deltaTime);
@@ -93,7 +92,6 @@ class Player extends GameObject {
         //collisions with floor
         const floors = this.game.gameObjects.filter((obj) => obj instanceof Floor);
         for (const floor of floors) {
-
             if (physics.isColliding(floor.getComponent(Physics))) {
                 if (!this.isJumping) {
                     physics.acceleration.y = 0;
@@ -107,7 +105,16 @@ class Player extends GameObject {
 
         //checking if player is out of bounds
         if (this.y >= 900 || this.x <= -100) {
-            this.spawnPlayer();
+            AudioFiles.ouch.play();
+            if (this.lives-1 < 0) {
+                AudioFiles.fail.play();
+                //reset
+            }
+            else {
+                this.shield = 100;
+                this.lives-=1;
+                this.spawnPlayer();
+            }
         }
 
         //checking for barrel collision
@@ -115,6 +122,7 @@ class Player extends GameObject {
         for (const b of barrels) {
             if (this.getComponent(Physics).isColliding(b.getComponent(Physics))) {
                 this.game.removeGameObject(b);
+                AudioFiles.barrelbreak.play();
                 
                 //using hammer ability
                 if (this.hammerAbility > 0) {
@@ -123,11 +131,19 @@ class Player extends GameObject {
                 }
                 //get stunned
                 else {
+                    AudioFiles.ouch.play();
                     //if there are no shields respawn player
                     if (this.shield-25 < 0 ) {
-                        this.shield = 100;
-                        this.lives-=1;
-                        this.spawnPlayer();
+                        //if there are no lives reset
+                        if (this.lives-1 < 0) {
+                            AudioFiles.fail.play();
+                            //reset
+                        }
+                        else {
+                            this.shield = 100;
+                            this.lives-=1;
+                            this.spawnPlayer();
+                        }
                     }
                     //stun player if they still have shields
                     else {
@@ -156,6 +172,8 @@ class Player extends GameObject {
         for (const c of collectibles) {
             if (this.getComponent(Physics).isColliding(c.getComponent(Physics))) {
                 this.game.removeGameObject(c);
+                AudioFiles.pickup.play();
+                
                 if (c instanceof Hammer) {
                     this.hammerAbility+=1;
                      this.emitParticles(c, "grey");
@@ -164,7 +182,6 @@ class Player extends GameObject {
                     this.lives+=1;
                      this.emitParticles(c, "green");
                 }
-               
             }
         }
 
