@@ -29,7 +29,7 @@ class Button extends GameObject {
     }
 
     draw(ctx) {
-        //super.draw(ctx);
+        super.draw(ctx);
         ctx.fillStyle = this.color;
         ctx.fillRect(this.game.camera.x + this.x, this.game.camera.y + this.y, this.width, this.height);
         ctx.textAlign = "center";
