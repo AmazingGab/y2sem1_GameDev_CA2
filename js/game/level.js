@@ -5,12 +5,14 @@ import Confiner from '../engine/confiner.js';
 import Player from './player.js';
 import Floor from './floor.js';
 import Barrel from './barrel.js';
+import Checkpoint from './checkpoint.js';
 import {Images} from '../engine/resources.js';
 
 class Level extends Game {
     constructor(canvasId)
     {
         super(canvasId);
+        this.mapGen(0, this.canvas.height, true);
         const player = new Player(10, this.canvas.height - 100, 64, 64);
         this.addGameObject(player);
         this.camera.confiner = new Confiner(-50, -5000, 11000, 9999999);
@@ -20,11 +22,10 @@ class Level extends Game {
         this.time = 5000;
         this.canSpawn = true;
 
-        this.mapGen(0, this.canvas.height, true);
     }
 
     randomSpawn() {
-        this.addGameObject(new Barrel(2000, this.canvas.height - 10000,25,25));
+        this.addGameObject(new Barrel(11000, this.canvas.height - 10000,25,25));
     }
     
     update(deltaTime) {
@@ -53,6 +54,8 @@ class Level extends Game {
     }
 
     startMap(x, y) {
+        let diffX = x;
+        
         const floors = [
             //first platform
             new Floor(x, y, 32, 96, Images.smoothLeft, true),
@@ -63,6 +66,7 @@ class Level extends Game {
             new Floor(x += 32, y, 32 * 10, 96, Images.smoothMiddle, true)
         ];
         
+        this.addGameObject(new Checkpoint(diffX+32+(32*2), y-100, 160, 100));
         this.addFloors(floors);
         this.mapGen(x + 320, y - 32, false);
     }
@@ -141,12 +145,15 @@ class Level extends Game {
             this.addFloors(floors);
             this.mapGen(x + (32 * 30), y - 32, false);
         } else if (id === 6) { //plain w checkpoint
+            let diffX = x;
+            
             const floors = [
                 //first platform
                 new Floor(x, y, 32, 96, Images.upFinish, true),
                 new Floor(x += 32, y, 32 * 30, 96, Images.smoothMiddle, true)
             ];
-
+            
+            this.addGameObject(new Checkpoint(diffX+32+(32*15), y-100, 160, 100));
             this.addFloors(floors);
             this.mapGen(x + (32 * 30), y - 32, false);
         } else if (id === 7) { //parkour

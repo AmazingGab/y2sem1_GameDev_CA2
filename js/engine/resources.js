@@ -1,11 +1,11 @@
 // Create an Images object to hold the Image instances for the player and the enemy.
 const Images = {
     player: new Image(), // The Image instance for the player.
-    collectible: new Image(), // The Image instance for the enemy.
     smoothMiddle: new Image(),
     smoothLeft: new Image(),
     smoothRight: new Image(),
-    upFinish: new Image()
+    upFinish: new Image(),
+    checkpoint: new Image()
 };
 
 // Create an AudioFiles object to hold the file paths of the audio resources.
@@ -20,6 +20,7 @@ Images.smoothMiddle.src = "./resources/images/environment/midsection.png";
 Images.smoothLeft.src = "./resources/images/environment/smoothfinishLeft.png";
 Images.smoothRight.src = "./resources/images/environment/smoothfinishRight.png";
 Images.upFinish.src = "./resources/images/environment/upfinish.png";
+Images.checkpoint.src = "./resources/images/checkpoint/checkpoint.png";
 
 
 // Export the Images and AudioFiles objects so they can be imported and used in other modules.

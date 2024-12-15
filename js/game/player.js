@@ -6,6 +6,7 @@ import Physics from '../engine/physics.js';
 import Input from "../engine/input.js";
 import Floor from './floor.js';
 import Barrel from './barrel.js';
+import Checkpoint from './checkpoint.js';
 import {Images, AudioFiles} from '../engine/resources.js';
 
 class Player extends GameObject {
@@ -91,13 +92,13 @@ class Player extends GameObject {
 
         }
 
-        if (this.y >= 800) {
+        if (this.y >= 900) {
             if (this.checkPoint === null) {
                 this.x = this.spawnPoint.x;
-                this.x = this.spawnPoint.x;
+                this.y = this.spawnPoint.y;
             } else {
                 this.x = this.checkPoint.x;
-                this.x = this.checkPoint.x;
+                this.y = this.checkPoint.y;
             }
         }
 
@@ -108,6 +109,13 @@ class Player extends GameObject {
                 if (!this.isStunned) {
                     this.stunPlayer();
                 }
+            }
+        }
+        
+        const checkpoints = this.game.gameObjects.filter(obj => obj instanceof Checkpoint);
+        for (const c of checkpoints) {
+            if (this.getComponent(Physics).isColliding(c.getComponent(Physics))) {
+                this.checkPoint = {x:c.x, y:c.y};
             }
         }
 
@@ -122,9 +130,9 @@ class Player extends GameObject {
         this.animator.setAnimation("stun");
         
         physics.velocity.y = -200;
-        physics.velocity.x = -50;
-        
-        setTimeout(() => (this.isStunned = false, this.animator.setAnimation("idle"), physics.velocity.x = 0), 2000);
+        physics.velocity.x = -25;
+        setTimeout(() => (physics.velocity.x = 0), 1000);
+        setTimeout(() => (this.isStunned = false, this.animator.setAnimation("idle")), 3000);
     }
 
     startJump() {
